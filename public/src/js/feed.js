@@ -63,7 +63,7 @@ function createCard() {
   // var cardSaveButton = document.createElement('button');
   // cardSaveButton.textContent = 'Save';
   // cardSaveButton.addEventListener('click', onSaveButtonClicked);
-  cardSupportingText.appendChild(cardSaveButton);
+  // cardSupportingText.appendChild(cardSaveButton);
   cardWrapper.appendChild(cardSupportingText);
   componentHandler.upgradeElement(cardWrapper);
   sharedMomentsArea.appendChild(cardWrapper);
