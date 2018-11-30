@@ -1,5 +1,5 @@
-var CACHE_STATIC_NAME = 'static-v9';
-var CACHE_DYNAMIC_NAME = 'dynamic-v4';
+var CACHE_STATIC_NAME = 'static-v10';
+var CACHE_DYNAMIC_NAME = 'dynamic-v5';
 
 self.addEventListener('install', function (event) {
   console.log('[service worker] installing Service worker...', event);
@@ -41,28 +41,60 @@ self.addEventListener('activate', function (event) {
   return self.clients.claim();
 });
 
+// DYNAMIC CACHING
+// self.addEventListener('fetch', function (event) {
+//   event.respondWith(
+//       caches.match(event.request)
+//           .then(function (response) {
+//             if (response) {
+//               return response;
+//             } else {
+//               return fetch(event.request)
+//                   .then(function (res) {
+//                     return caches.open(CACHE_DYNAMIC_NAME)
+//                         .then(function (cache) {
+//                           cache.put(event.request.url, res.clone());
+//                           return res;
+//                         })
+//                   })
+//                   .catch(function (err) {
+//                     return caches.open(CACHE_STATIC_NAME)
+//                         .then(function (cache) {
+//                           return cache.match('/offline.html');
+//                         });
+//                   });
+//             }
+//           })
+//   );
+// });
+
+// CACHE ONLY
+// self.addEventListener('fetch', function (event) {
+//   event.respondWith(
+//       caches.match(event.request)
+//   );
+// });
+
+// FETCH FROM NETWORK THEN FROM CACHE IF RESOURCE MISSING
 self.addEventListener('fetch', function (event) {
   event.respondWith(
-      caches.match(event.request)
-          .then(function (response) {
-            if (response) {
-              return response;
-            } else {
-              return fetch(event.request)
-                  .then(function (res) {
-                    return caches.open(CACHE_DYNAMIC_NAME)
-                        .then(function (cache) {
-                          cache.put(event.request.url, res.clone());
-                          return res;
-                        })
-                  })
-                  .catch(function (err) {
-                    return caches.open(CACHE_STATIC_NAME)
-                        .then(function (cache) {
-                          return cache.match('/offline.html');
-                        });
-                  });
-            }
+      fetch(event.request)
+          .then(function(res) {
+            return caches.open(CACHE_DYNAMIC_NAME)
+              .then(function (cache) {
+                cache.put(event.request.url, res.clone());
+                return res;
+              })
+          })
+          .catch(function (err) {
+            return caches.match(event.request);
           })
   );
 });
+
+// NETWORK ONLY
+// self.addEventListener('fetch', function (event) {
+//   event.respondWith(
+//       fetch(event.request)
+//   );
+// });
