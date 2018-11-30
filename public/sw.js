@@ -1,5 +1,5 @@
 var CACHE_STATIC_NAME = 'static-v14';
-var CACHE_DYNAMIC_NAME = 'dynamic-v5';
+var CACHE_DYNAMIC_NAME = 'dynamic-v6';
 
 self.addEventListener('install', function (event) {
   console.log('[service worker] installing Service worker...', event);
@@ -74,7 +74,9 @@ self.addEventListener('fetch', function (event) {
                   .catch(function (err) {
                     return caches.open(CACHE_STATIC_NAME)
                         .then(function (cache) {
-                          return cache.match('/offline.html');
+                          if (event.request.url.indexOf('/help')) {
+                            return cache.match('/offline.html');
+                          }
                         });
                   });
             }
