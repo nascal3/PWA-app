@@ -68,7 +68,7 @@ function isInArray (string, array) {
 
 // FETCH FROM CACHE THEN FROM NETWORK
 self.addEventListener('fetch', function (event) {
-  var url = 'https://httpbin.org/get';
+  var url = 'https://pwagram-edb34.firebaseio.com/posts.json';
 
   if (event.request.url.indexOf(url) > 1) {
     event.respondWith(
